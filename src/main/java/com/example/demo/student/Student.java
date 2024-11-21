@@ -1,46 +1,42 @@
 package com.example.demo.student;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.Period;
+
+@Getter
+@Entity
+@Table
+@NoArgsConstructor
 public class Student {
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    @Id
+    @SequenceGenerator(name = "student_sequence",
+            sequenceName = "student_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "student_sequence"
+    )
     long id;
-    int age;
     String name;
     String email;
-    public Student(long id, String name, int age, String email){
-        this.id = id;
+    long created;
+    LocalDate dob;
+    @Transient
+    int age;
+
+    public Integer getAge() {
+        return Period.between(this.dob, LocalDate.now()).getYears();
+    }
+
+    public Student(String name, String email, long created, LocalDate dob) {
         this.name = name;
-        this.age = age;
         this.email = email;
+        this.created = created;
+        this.dob = dob;
     }
 }
